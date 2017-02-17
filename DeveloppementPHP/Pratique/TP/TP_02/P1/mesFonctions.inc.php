@@ -1,18 +1,23 @@
 <?php
-
+/**
+ * scriptInfos donne des informations sur le script qui l'appelle et le serveur utilisé
+ * @param string $param Si vide, renvoie un tableau avec toutes les informations. Sinon la function vas interpréter le paramètre pour renvoyé la valeur associé
+ * @return array|int|mixed|string
+ */
 function scriptInfos($param = 'infos'){
 
-    // On crée un variable statique, qui garde son dernier état à chaque appel de la fonction. Si l'on exécute deux fois la fonction d'affilé, la premiere aura son $premierPassage true, la seconde fois il vaudra false.
-    static $premierPassage = true;
+    // Une variable statique garde son dernier état. Elle n'est pas réinitialisée à chaque appel de la fonction
+    static $nbPassage = 0;
 
 
     //On simplifie et mettons en minuscule le paramètre afin de pouvoir permettre les paramètres "scriptFullPath" ou encore "fullpath", "FullPath" d'êtres interprété de la même manière par exemple
     $shortParam = str_replace('script', '', strtolower($param));
 
     /*
-    * Selon le site officiel de PHP
+    * Selon la doc officiel de PHP
     * mieux vaut être prudent lorsque l'on appele une constante _NOM_DE_LA_CONSTANTE_ (avec les 2 underscores)
     * car php pourrait un jour les utiliser comme constante magique (http://php.net/manual/fr/language.constants.php)
+    * Ici j'utilise seulement un seul underscore afin d'être sur que cela ne pose pas de problème dans le future.
     */
     // Dans le cas d'une adresse on peux utiliser la fonction basename qui retourne uniquement le nom du fichier.
     if (!defined('_SCRIPT_NAME_'))      define('_SCRIPT_NAME_', basename($_SERVER['SCRIPT_NAME']));
@@ -33,7 +38,9 @@ function scriptInfos($param = 'infos'){
         'scriptFullPath' => $_SERVER["HTTP_REFERER"]._SCRIPT_NAME_
         );
 
-    $premierPassage = false;
+    if($shortParam != "nbpassage"){
+    $nbPassage++;
+    }
     switch($shortParam){
 
         case 'name':
@@ -66,11 +73,11 @@ function scriptInfos($param = 'infos'){
         case 'infos':
             return $scriptInfo;
             break;
+        case 'nbpassage':
+            return $nbPassage;
+            break;
         default:
             return '<span style="color:red;">Erreur dans <strong>'.__METHOD__.'()</strong> : paramètre inconnu ('.$param.')</span>';
             break;
     }
-
-
-
 }
