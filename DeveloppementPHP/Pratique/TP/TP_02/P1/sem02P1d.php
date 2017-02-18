@@ -29,3 +29,7 @@
         echo scriptInfos("nbPassage").'<br><br>';
 ?>
 </pre>
+
+<?php
+//Prépa. pour le TP suivant
+print_r(creeTableau(scriptInfos(), 'Script Info'));
