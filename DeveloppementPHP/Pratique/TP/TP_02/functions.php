@@ -45,4 +45,40 @@ function scriptInfos($info = "INFOS") {
     }
 }
 
+function creeTableau($table, $titre = "", $index = false) {
+    $tableHTML = "<table>";
+    $tableHTML .= "<caption>" . $titre . "</caption>";
+    $tableHTML .= "<thead><tr>";
+
+    if ($index) {
+        $tags = array_merge(['index'], array_keys($table[array_keys($table)[0]]));
+    } else {
+        $tags = array_keys($table[array_keys($table)[0]]);
+    }
+
+    foreach ($tags as $tag) {
+        $tableHTML .= "<td>" . $tag . "</td>";
+    }
+    $tableHTML .= "</tr></thead><tbody>";
+
+    foreach ($table as $key => $value) {
+        $tableHTML .= "<tr>";
+        if ($index) $tableHTML .= "<td>" . $key . "</td>";
+        foreach ($value as $el) {
+            $tableHTML .= "<td>" . $el . "</td>";
+        }
+        $tableHTML .= "</tr>";
+    }
+
+    $tableHTML .= "</tbody></table>";
+    return $tableHTML;
+}
+
+function myPrintR($table) {
+    $customPre = "<pre>";
+    $customPre .= print_r($table, true); // true, retourne le résultat de print_r
+    $customPre .= "</pre>";
+    return $customPre;
+}
+
 
