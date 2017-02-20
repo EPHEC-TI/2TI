@@ -1,4 +1,4 @@
-Ó# Solution P2-SQL "Agrégats & JOIN"
+# Solution P2-SQL "Agrégats & JOIN"
 
 ## Phase 1: MYSQL Workbench
 
@@ -100,4 +100,74 @@
     INNER JOIN world.country AS ct
     ON ct.code = ctLang.CountryCode
     WHERE ctLang.isOfficial = 'F'
+    ```
+
+## A faire chez soi
+
+1. Dans `world` : mono-table
+  1. Afficher la superficie de chacune des régions d'Europe
+    ```sql
+    SELECT ct.Region, SUM(ct.SurfaceArea) FROM world.country AS ct
+    WHERE ct.Continent = 'Europe' AND ct.Region LIKE '%Europe'
+    GROUP BY ct.Region
+    ```
+
+  1. Pour chacun des continents, afficher le(s) pays qui a (ont) eu leur indépendance le plus récemment
+    ```sql
+    SELECT ct1.Name, ct1.Continent, ct1.IndepYear
+    FROM world.country AS ct1
+    JOIN (SELECT ct.Continent, MAX(ct.IndepYear) AS 'maxIndepYear' FROM world.country AS ct GROUP BY Continent) ct2
+    ON ct1.Continent = ct2.Continent AND ct1.IndepYear = ct2.maxIndepYear
+    ORDER BY ct1.Continent, ct1.Name
+    ```
+1. Dans `minicampus` : mono-table
+  1. Afficher la liste des facultés "de base" (Celles qui n'ont pas de parent)
+    ```sql
+    SELECT * FROM minicampus.faculte WHERE faculte.codeParent IS NULL
+    ```
+  1. Afficher les "filles" d'une faculté donnée (p.e. TI)
+    ```sql
+    SELECT * FROM minicampus.faculte WHERE faculte.codeParent = "TI"
+    ```
+  1. Afficher la liste des classes "de base" (celles qui n'ont pas de parent)
+    ```sql
+    SELECT * FROM minicampus.class WHERE class.parent_id IS NULL;
+    ```
+  1. Afficher les "filles" d'une "section" donnée (p.e TI)
+    ```sql
+    SELECT class.nom AS 'nomFilles(TI)' FROM minicampus.class WHERE parent_id = 1;
+    ```
+  1. Afficher les "filles des filles" d'une classe donnée (p.e TI)
+    ```sql
+    SELECT class.nom AS 'nomPetitesFilles(TI)' FROM minicampus.class WHERE class.parent_id BETWEEN 2 AND 4
+    ```
+1. Dans `minicampus` : multi-tables
+  1. Pour tous les étudiants, afficher les informations suivantes :  
+    Groupe, Matricule, Nom, Prénom, Email (construit : matricule@students...)
+    ```sql
+    SELECT class.nom, UCASE(user.username) AS 'matricule', user.nom, user.prenom, CONCAT(LCASE(user.username), '@students.ephec.be')
+    FROM minicampus.user
+    INNER JOIN minicampus.class_user
+    ON user.id = class_user.user_id
+    INNER JOIN minicampus.class
+    ON class_user.class_id = class.id
+    WHERE user.username LIKE 'HE%';
+    ```
+  1. Afficher la liste des cours (code, faculté et libellé) pour une classe donnée (p.e. 1TL2)
+    ```sql
+    SELECT cours.code, cours.intitule
+    FROM minicampus.cours
+    INNER JOIN minicampus.course_class
+    ON cours.code = course_class.cours_id
+    INNER JOIN minicampus.class
+    ON class.id = course_class.class_id
+    WHERE class.nom='1TL2';
+    ```
+  1. Pour chacune des "facultés", afficher ces informations précédées du nom de son "parent"
+    ```sql
+    SELECT f2.nom, f1.id, f1.nom, f1.code, f1.codeParent, f1.position, f1.nbEnfants
+    FROM minicampus.faculte f1
+    INNER JOIN minicampus.faculte f2
+    ON f1.codeParent = f2.code
+    WHERE f1.codeParent IS NOT NULL
     ```
