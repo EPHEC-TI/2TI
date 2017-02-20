@@ -147,5 +147,4 @@ Si l'on désire supprimer un élément qui est une clef étrangère il y à 4 op
 2. mode Cascade (Ligne supprimée, mais aussi les lignes de COMMANDE dépendantes) : Très dangereux !
 3. Mode set Null (si NCLI de COMMANDE facultative) la colonne NCLI des lignes dépendantes de COMMANDE est mise à Null) - Pas top
 4. Mode set default : Applique la valeur par défaut (définis dans le schéma de la BDD)
-
 END : 17/02/2017
