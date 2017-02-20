@@ -4,8 +4,8 @@
  * @param string $param Si vide, renvoie un tableau avec toutes les informations. Sinon la function vas interpréter le paramètre pour renvoyé la valeur associé
  * @return array|int|mixed|string
  */
-function scriptInfos($param = 'infos')
-{
+function scriptInfos($param = 'infos'){
+
     // Une variable statique garde son dernier état. Elle n'est pas réinitialisée à chaque appel de la fonction
     static $nbPassage = 0;
 
@@ -20,28 +20,28 @@ function scriptInfos($param = 'infos')
     * Ici j'utilise seulement un seul underscore afin d'être sur que cela ne pose pas de problème dans le future.
     */
     // Dans le cas d'une adresse on peux utiliser la fonction basename qui retourne uniquement le nom du fichier.
-    if (!defined('_SCRIPT_NAME_')) define('_SCRIPT_NAME_', basename($_SERVER['SCRIPT_NAME']));
-    if (!defined('_SCRIPT_DNS_')) define('_SCRIPT_DNS_', $_SERVER['SERVER_NAME']);
-    if (!defined('_SCRIPT_PATH_')) define('_SCRIPT_PATH_', $_SERVER['PATH_TRANSLATED']);
-    if (!defined('_SCRIPT_PROTOCOL_')) define('_SCRIPT_PROTOCOL_', $_SERVER['SERVER_PROTOCOL']);
+    if (!defined('_SCRIPT_NAME_'))      define('_SCRIPT_NAME_', basename($_SERVER['SCRIPT_NAME']));
+    if (!defined('_SCRIPT_DNS_'))       define('_SCRIPT_DNS_', $_SERVER['SERVER_NAME']);
+    if (!defined('_SCRIPT_PATH_'))      define('_SCRIPT_PATH_', $_SERVER['PATH_TRANSLATED']);
+    if (!defined('_SCRIPT_PROTOCOL_'))  define('_SCRIPT_PROTOCOL_', $_SERVER['SERVER_PROTOCOL']);
 
 
-    $scriptInfo = Array(
+    $scriptInfo = Array (
         'scriptName' => _SCRIPT_NAME_,
         'scriptDns' => _SCRIPT_DNS_,
         'scriptPath' => _SCRIPT_PATH_,
         'scriptProtocol' => _SCRIPT_PROTOCOL_,
-        'scriptExtension' => '.' . pathinfo(_SCRIPT_NAME_, PATHINFO_EXTENSION),
+        'scriptExtension' =>'.'.pathinfo(_SCRIPT_NAME_, PATHINFO_EXTENSION),
         'scriptShortName' => pathinfo(_SCRIPT_NAME_, PATHINFO_FILENAME),
         'scriptDirs' => pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME),
         'scriptLongPath' => $_SERVER['SCRIPT_NAME'],
-        'scriptFullPath' => $_SERVER["HTTP_REFERER"] . _SCRIPT_NAME_
-    );
+        'scriptFullPath' => $_SERVER["HTTP_REFERER"]._SCRIPT_NAME_
+        );
 
-    if ($shortParam != "nbpassage") {
-        $nbPassage++;
+    if($shortParam != "nbpassage"){
+    $nbPassage++;
     }
-    switch ($shortParam) {
+    switch($shortParam){
 
         case 'name':
             return $scriptInfo['scriptName'];
@@ -77,45 +77,80 @@ function scriptInfos($param = 'infos')
             return $nbPassage;
             break;
         default:
-            return '<span style="color:red;">Erreur dans <strong>' . __METHOD__ . '()</strong> : paramètre inconnu (' . $param . ')</span>';
+            return '<span style="color:red;">Erreur dans <strong>'.__METHOD__.'()</strong> : paramètre inconnu ('.$param.')</span>';
             break;
     }
 }
 
-//Prépa pour le TP suivant
-function creeTableau(array $liste, $titre = NULL){
-    //On récupère le "clef" du tableau ("Marque" => "VW", "Puissance" => "3KW" vas donner un tableau avec ([0] => "Marque", [1] => "Puissance)
-    $clef = array_keys($liste);
+/**
+ * CreeTableau retourne un tableau formatté en HTML5 pour une liste donnée
+ * @param Array $liste  Le tableau de donnée à traiter. Ce tableau doit être composé de sous-array
+ * @param string $titre Le titre du tableau
+ * @param bool $index true affiche les indexes; false sinon
+ * @return string un tableau formatté en HTML5 avec les données passée en paramètre
+ */
+function creeTableau($liste, $titre = 'Tableau', $index){
 
-    $table = '<table>';
-    if(isset($titre)){
-        $table .= '<caption>'.$titre.'</caption>';
+    //On obtiens un tableau avec les indexes de la liste (Ex : bo124, bo254,..)
+    $refListe = array_keys($liste);
+
+
+    if(is_array($liste[$refListe[0]])){
+        $titreListe = array_keys($liste[$refListe[0]]);
     }
-        $table .='<thead>';
-            $table .='<tr>';
-                //Possibilité 1 :
-                $table .='<th>Clef :</th>';
-                $table .='<th>Valeur :</th>';
-                //Possibilité 2 (Les clef de $liste sont les têtes de colonnes) :
-                /*for($i=0; $i < count($clef); $i++){
-                    $table .='<th>'.$clef[$i].'</th>';
-                }*/
-            $table .='</tr>';
-        $table .='</thead>';
-        $table .='<tbody>';
-        for($i=0; $i < count($liste); $i++){
-            $table .='<tr>';
-                //Possibilité 1 :
-                $table .='<td>'.$clef[$i].'</td>';
-                $table .='<td>'.$liste[$clef[$i]].'</td>';
-                //Possibilité 2 (Les clef de $liste sont les têtes de colonnes) :
-                /*for($i=0; $i < count($clef); $i++){
-                    $table .='<th>'.$liste[$clef[$i]].'</th>';
-                }*/
-            $table .='</tr>';
-        }
-        $table .='</tbody>';
-    $table .='</table>';
+
+
+
+    //OPTIONEL : Provoque un retour de ligne (pour l'indentation du code source généré par php)
+    $n = "\r\n";
+    //OPTIONEL : Provoque une tabulation (pour l'indentation du source généré par php)
+    $t = "\t";
+
+    $table = $n.'<table>'."\r\n";
+        $table .= $t.'<caption>'.$titre.'</caption>'.$n;
+        $table .= $t.'<thead>'.$n;
+            $table .= $t.$t.'<tr>'.$n;
+                if($index){
+                    $table .= $t.$t.$t.'<th>Index</th>'.$n;
+                }
+                for($i=0; $i < count($titreListe); $i++){
+                    $table .= $t.$t.$t.'<th>'.ucwords($titreListe[$i]).'</th>'.$n;
+                }
+                $table .= $t.$t.$t.'<th></th>'.$n;
+            $table .= $t.$t.'</tr>'.$n;
+        $table .= $t.'</thead>'.$n;
+        $table .= $t.'<tbody>'.$n;
+                for($i = 0; $i < count($refListe); $i++) {
+                    $table .= $t.$t.'<tr>'.$n;
+                    if ($index) {
+                        $table .= $t . $t . $t . '<td>' . $refListe[$i] . '</td>' . $n;
+                    }
+                    for ($j = 0; $j < count($titreListe); $j++){
+                        $table .= $t . $t . $t . '<td>' . $liste[$refListe[$i]][$titreListe[$j]] . '</td>' . $n;
+                    }
+                    $table .=$t.$t.'</tr>'.$n;
+                }
+
+        $table .=$t.'</tbody>'.$n;
+    $table .='</table>'.$n;
     return $table;
 }
 
+/**
+ * Imprime de manière lisible un tableau passé en paramètre. Entoure celui-ci des balises <pre></pre>
+ * @param $liste Un tableau
+ * @return string retourne l'impression d'un Array formatté pour être lisible
+ */
+function monPrint_r($liste){
+
+    //OPTIONEL : Provoque un retour de ligne (pour l'indentation du code source généré par php)
+    $n = "\r\n";
+
+    $out = $n.'<pre>'.$n;
+
+    $out .= print_r($liste, true);
+
+    $out .= '</pre>'.$n;
+
+    return $out;
+}

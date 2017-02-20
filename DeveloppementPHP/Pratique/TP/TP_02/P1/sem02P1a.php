@@ -6,4 +6,5 @@ phpinfo(INFO_VARIABLES);
 echo "A.1 Le nom du script : ".basename($_SERVER['SCRIPT_NAME']).'<br>';
 echo "A.2 DNS du serveur : ".$_SERVER['SERVER_NAME'].'<br>';
 echo "A.3 Chemin permettant d'aller de la racine du serveur au script : ".$_SERVER["SCRIPT_FILENAME"].'<br>';
-echo "A.4 Type de protocol utilisé :  ".$_SERVER["SERVER_PROTOCOL"];
+// SERVER_PORT_SECURE permet de savoir si on est en http ou https.
+echo "A.4 Type de protocol utilisé :  ".$_SERVER["SERVER_PROTOCOL"].' SSL : '.($_SERVER["SERVER_PORT_SECURE"] ? 'OUI' : 'NON');
