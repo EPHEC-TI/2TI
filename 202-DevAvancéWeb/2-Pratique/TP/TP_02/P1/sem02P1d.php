@@ -23,6 +23,8 @@
         print_r(scriptInfos("scriptDirs").'<br><br>');
     echo "<br>Param : scriptLongPath </br>";
         echo scriptInfos("scriptLongPath").'<br><br>';
+    echo "<br>Param : scriptFullPath </br>";
+        echo scriptInfos("scriptFullPath").'<br><br>';
     echo "Param : ImToOldForThisCrap<br>";
         echo scriptInfos("ImToOldForThisCrap").'<br><br>';
     echo "Param : nbPassage<br>";
