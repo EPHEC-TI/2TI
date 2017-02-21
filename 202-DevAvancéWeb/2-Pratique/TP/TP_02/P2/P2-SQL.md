@@ -147,7 +147,8 @@
 
   1. Afficher les "filles" d'une "section" donnée (p.e TI)
     ```sql
-    SELECT class.nom AS 'nomFilles(TI)' FROM minicampus.class WHERE parent_id = 1;
+    SELECT class.nom AS 'nomFilles(TI)' FROM minicampus.class
+    WHERE class.parent_id = (SELECT class.id FROM minicampus.class where class.nom = 'TI');
     ```
 
   1. Afficher les "filles des filles" d'une classe donnée (p.e TI)
