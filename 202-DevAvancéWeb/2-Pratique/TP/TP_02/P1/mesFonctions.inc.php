@@ -3,6 +3,7 @@
  * scriptInfos donne des informations sur le script qui l'appelle et le serveur utilisé
  * @param string $param Si vide, renvoie un tableau avec toutes les informations. Sinon la function vas interpréter le paramètre pour renvoyé la valeur associé
  * @return array|int|mixed|string
+ * @version 1.0.1 Feb 2017
  */
 function scriptInfos($param = 'infos'){
 
@@ -23,7 +24,9 @@ function scriptInfos($param = 'infos'){
     if (!defined('_SCRIPT_NAME_'))      define('_SCRIPT_NAME_', basename($_SERVER['SCRIPT_NAME']));
     if (!defined('_SCRIPT_DNS_'))       define('_SCRIPT_DNS_', $_SERVER['SERVER_NAME']);
     if (!defined('_SCRIPT_PATH_'))      define('_SCRIPT_PATH_', $_SERVER['PATH_TRANSLATED']);
-    if (!defined('_SCRIPT_PROTOCOL_'))  define('_SCRIPT_PROTOCOL_', $_SERVER['SERVER_PROTOCOL']);
+    if (!defined('_SCRIPT_PROTOCOL_'))  define('_SCRIPT_PROTOCOL_', strtolower(substr($_SERVER['SERVER_PROTOCOL'],0,4)).($_SERVER["SERVER_PORT_SECURE"] ? 'S':''));
+
+
 
 
     $scriptInfo = Array (
@@ -35,7 +38,7 @@ function scriptInfos($param = 'infos'){
         'scriptShortName' => pathinfo(_SCRIPT_NAME_, PATHINFO_FILENAME),
         'scriptDirs' => pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME),
         'scriptLongPath' => $_SERVER['SCRIPT_NAME'],
-        'scriptFullPath' => $_SERVER["HTTP_REFERER"]._SCRIPT_NAME_
+        'scriptFullPath' => _SCRIPT_PROTOCOL_.'://'._SCRIPT_DNS_.pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME)._SCRIPT_NAME_
         );
 
     if($shortParam != "nbpassage"){
