@@ -11,6 +11,8 @@
     1. Afficher la liste des tables disponibles : `SHOW tables`
     1. Afficher la structure des tables :
     ```
+    show create table city;
+    
     DESCRIBE city;
     DESCRIBE country;
     DESCRIBE countrylanguage;
