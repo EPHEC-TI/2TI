@@ -15,13 +15,14 @@ if(isset($_GET['groupe'])) {
     try {
         $bdd = new PDO('mysql:host=' . getServer() . ';dbname=' . $dbName . ';charset=utf8', $__INFOS__['user'], $__INFOS__['pswd']);
 
-        $checkQuery = 'SELECT c1.nom, c2.nom FROM class c1 JOIN class c2 ON c1.parent_id = c2.id WHERE c1.nom LIKE ?';
+        $checkQuery = 'SELECT c1.nom AS \'Nom enfant\', c2.nom AS \'Nom parent\' FROM class c1 JOIN class c2 ON c1.parent_id = c2.id WHERE c1.nom LIKE ?';
 
         $checkClasse = $bdd->prepare($checkQuery);
         $checkClasse->execute(array($classe));
 
         $classeChecked = $checkClasse->fetch(PDO::FETCH_NUM);
 
+        $checkClasse->closeCursor();
 
         if($classeChecked == NULL OR !isset($classeChecked)){
             echo 'Ce groupe n\'existe pas';
@@ -46,6 +47,7 @@ if(isset($_GET['groupe'])) {
 
             $data = $reponse->fetchAll(PDO::FETCH_ASSOC);
 
+            $reponse->closeCursor();
 
 
             if(!empty($data)){
