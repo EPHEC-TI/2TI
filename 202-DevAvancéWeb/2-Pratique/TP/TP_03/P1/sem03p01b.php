@@ -21,6 +21,7 @@ try
 
         echo monPrint_r($row);
     }
+    $reponse->closeCursor();
 }
 catch (Exception $e)
 {

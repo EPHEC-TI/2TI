@@ -17,7 +17,7 @@ try
     $reponse = $bdd->query($query);
 
     $data = $reponse->fetchAll(PDO::FETCH_ASSOC);
-
+    $reponse->closeCursor();
         echo monPrint_r($data);
 
 }
