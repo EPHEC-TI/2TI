@@ -145,3 +145,13 @@ sudo service ssh restart
 ssh root@serveur
 Permission denied (publickey).
 ```
+## Changer le nom d'hôte (hotname)
+- Etant connecté avec un utilisateur ayant les droits administrateur
+- Utiliser la commande `hostname` 
+ ```bash
+ sudo hostname nomDeDomaine
+ ```
+- Relancer le serveur
+ ```bash
+ sudo reboot
+ ```
