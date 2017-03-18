@@ -1,6 +1,3 @@
-# Dockify
-EPHEC - 2016/17 - T2062 Administration système et réseaux II
-
 ## Finalité
 Mettre en place une infrastructure réseau répondant aux besoins d'une entreprise fictive.
 
