@@ -1,0 +1,286 @@
+__HQ____________________________________________________________________________
+________________________________________________________________________________
+!-------------------------------------------------------------------------------
+! HQ-CSW-01
+!-------------------------------------------------------------------------------
+! ADMIN BASE
+hostname HQ-CSW-01
+!
+! création des VLANS
+!
+VLAN 10
+	name PROD
+VLAN 20 
+	name RD
+VLAN 100
+	name IT
+!
+interface VLAN 1 
+	description "NOT USED"
+	exit
+interface VLAN 10	
+	description "Gateway du VLAN 10"
+	ip address 10.1.10.254 255.255.255.0
+	no shutdown 
+	exit
+!
+interface VLAN 20
+	description "Gateway du VLAN 20"
+	ip address 10.1.20.254 255.255.255.0 
+	no shutdown
+	exit 
+!
+interface VLAN 100
+	description "Gateway du VLAN 100"
+	ip address 10.1.100.254 255.255.255.0
+	no shutdown 
+	exit
+!
+interface F0/1
+	description "VERS HQ-SW-01"
+	switchport trunk encapsulation dot1q 
+	switchport mode trunk 
+	! pas nécessaire car vlan 1 est par défaut natif mais au cas ou
+	switchport trunk native vlan 1
+	exit
+!
+interface F0/2
+	description "VERS HQ-SW-02"
+	switchport trunk encapsulation dot1q 
+	switchport mode trunk 
+	! pas nécessaire car vlan 1 est par défaut natif mais au cas ou
+	switchport trunk native vlan 1
+	exit
+! 
+! toutes les interfaces non-connectées sont déja dans le vlan 1 donc il n'est 
+! pas nécessaire de les associer a nouveau a ce vlan "poubelle"
+!
+interface F0/24
+	no switchport 
+	description vers "HQ-RT-01"
+	ip address 10.1.2.253 255.255.255.252
+	no shutdown
+	exit
+!
+!
+interface F0/23
+	no switchport 
+	description vers "HQ-RT-02"
+	ip address 10.1.3.253 255.255.255.252
+	no shutdown
+	exit
+!
+!
+interface G0/1
+	no switchport 
+	description vers "HQ-RT-03"
+	ip address 10.1.0.253 255.255.255.252
+	no shutdown
+	exit
+!
+! configuration de vtp 
+! vtp est déja configuré avec le L3 en mode server et le domain name formation
+!
+! ROUTING
+no ip router ospf 1
+router ospf 1
+	auto-cost reference-bandwidth 1000 
+	network 10.1.10.0 0.0.0.255 area 0
+	network 10.1.20.0 0.0.0.255 area 0
+	network 10.1.100.0 0.0.0.255 area 0
+	network 10.1.2.252 0.0.0.3 area 0
+	network 10.1.3.252 0.0.0.3 area 0
+	network 10.1.0.252 0.0.0.3 area 0
+	passive-interface F0/1
+	passive-interface F0/2
+	exit 
+	
+!-------------------------------------------------------------------------------
+! HQ-SW-01
+!-------------------------------------------------------------------------------
+!
+hostname HQ-SW-01
+!
+interface F0/24 
+	description "Vers HQ-CSW-01"
+	switchport mode trunk
+	switchport trunk native vlan 1
+	exit 
+!
+interface F0/23
+	description "Vers HQ-SW-02"
+	switchport mode trunk
+	switchport trunk native vlan 1 
+	exit
+!
+interface vlan 100	
+	description "VLAN de gestion"
+	ip address 10.1.100.241 255.255.255.0
+	no shutdown 
+	exit
+!
+ip default-gateway 10.1.100.254 
+!-------------------------------------------------------------------------------
+! HQ-SW-02
+!-------------------------------------------------------------------------------
+!
+hostname HQ-SW-02
+!
+interface F0/24 
+	description "Vers HQ-CSW-01"
+	switchport mode trunk
+	switchport trunk native vlan 1
+	exit 
+!
+interface F0/23
+	description "Vers HQ-SW-01"
+	switchport mode trunk
+	switchport trunk native vlan 1 
+	exit
+!
+interface vlan 100	
+	description "VLAN de gestion"
+	ip address 10.1.100.242 255.255.255.0
+	no shutdown 
+	exit
+!
+ip default-gateway 10.1.100.254 
+!-------------------------------------------------------------------------------
+! HQ-RT-01
+!-------------------------------------------------------------------------------
+!
+hostname HQ-RT-01
+!
+interface F0/0
+	description "Vers HQ-CSW-01"
+	ip address 10.1.2.254 255.255.255.252
+	no shutdown
+	exit
+!
+!
+interface F1/0
+	description "Vers FA-RT-01 100Mb/s, principale"
+	ip address 200.12.1.1 255.255.255.252
+	bandwidth 100000
+	no shutdown
+	exit
+!
+interface S0/2/1
+	description "Vers FA-RT-01 4Mb/s, secours"
+	ip address 200.12.2.1 255.255.255.252
+	bandwidth 4000
+	no shutdown
+	exit
+!
+! ROUTING 
+!
+!avant le routage, il faut préciser la bandwith des interfaces qui sont en 
+! "concurrence"
+no router ospf 1
+router ospf 1
+	auto-cost reference-bandwidth 1000
+	network 200.12.1.0 0.0.0.3 area 1 
+	network 200.12.2.0 0.0.0.3 area 1 
+	network 10.1.2.252 0.0.0.3 area 0
+	area 1 stub no-summary
+	exit 
+	
+!-------------------------------------------------------------------------------
+! HQ-RT-02
+!-------------------------------------------------------------------------------
+!
+hostname HQ-RT-02
+!
+interface F0/0
+	description "Vers HQ-CSW-01"
+	ip address 10.1.3.254 255.255.255.252
+	no shutdown
+	exit
+!
+!
+interface F1/0
+	description "Vers WH-RT-01 100Mb/s"
+	ip address 200.13.1.1 255.255.255.252
+	no shutdown
+	exit
+!
+interface F0/1	
+	ip address dhcp
+	bandwidth 100000
+	no shutdown
+	exit
+!
+ip route 0.0.0.0 0.0.0.0 F0/1 100
+!
+no router ospf 1
+router ospf 1
+	auto-cost reference-bandwidth 1000
+	network 10.1.3.252 0.0.0.3 area 0 
+	network 200.13.1.0 0.0.0.3 area 2
+	passive-interface F0/1
+	area 2 nssa
+	redistribute static subnets
+	exit
+!
+!-------------------------------------------------------------------------------
+! HQ-RT-03
+!-------------------------------------------------------------------------------
+!
+hostname HQ-RT-03
+!
+interface G4/0 
+	ip address 10.1.0.254 255.255.255.252
+	no shutdown 
+	exit 
+!
+interface G8/0 
+	ip address dhcp
+	bandwidth 1000000
+	no shutdown
+	exit
+!
+! ROUTING 
+! 
+ip route 0.0.0.0 0.0.0.0 G8/0 
+!
+router ospf 1
+	auto-cost reference-bandwidth 1000
+	network 10.1.0.252 0.0.0.3 area 0 
+	default-information originate
+	passive-interface G8/0
+	exit
+!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

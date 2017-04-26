@@ -1,0 +1,155 @@
+__WAREHOUSE_____________________________________________________________________
+________________________________________________________________________________
+!-------------------------------------------------------------------------------
+! WH-RT-01
+!-------------------------------------------------------------------------------
+!
+hostname WH-RT-01
+!
+interface F0/0
+	no shutdown
+	exit
+!
+interface F0/0.10
+	description "Vers VLAN 10"
+	encapsulation dot1Q 10
+	ip address 10.3.10.254 255.255.255.0
+	no shutdown
+	exit
+!
+interface F0/0.100
+	description "Vers VLAN 100"
+	encapsulation dot1Q 100
+	ip address 10.3.100.254 255.255.255.0
+	no shutdown
+	exit
+!
+interface F1/0
+	description "Vers HQ-RT-02 100Mb/s"
+	ip address 200.13.1.2 255.255.255.252
+	no shutdown
+	exit
+!
+! ROUTING 
+! 
+no router ospf 1
+router ospf 1
+	auto-cost reference-bandwidth 1000
+	network 200.13.1.0 0.0.0.3 area 2
+	network 10.3.10.0 0.0.0.255 area 2 
+	network 10.3.100.0 0.0.0.255 area 2
+	area 2 nssa 
+	exit 
+!
+!-------------------------------------------------------------------------------
+! WH-RT-03
+!-------------------------------------------------------------------------------
+!
+hostname WH-RT-03
+interface F0/1
+	no shutdown
+	exit
+!
+interface F0/1.10
+	description "Vers VLAN 10"
+	encapsulation dot1Q 10
+	ip address 10.3.10.253 255.255.255.0
+	no shutdown
+	exit
+!
+interface F0/1.100
+	description "Vers VLAN 100"
+	encapsulation dot1Q 100
+	ip address 10.3.100.253 255.255.255.0
+	no shutdown
+	exit
+!
+interface F0/0
+	ip address dhcp
+	no shutdown
+	exit
+!
+! Routing 
+router ospf 1
+	auto-cost reference-bandwidth 1000
+	network 10.3.10.0 0.0.0.255 area 2 
+	network 10.3.100.0 0.0.0.255 area 2
+	exit 
+ip route 0.0.0.0 0.0.0.0 F0/0 150
+!-------------------------------------------------------------------------------
+! WH-RT-02
+!-------------------------------------------------------------------------------
+!
+hostname WH-RT-02
+interface F0/1
+	no shutdown
+	exit
+!
+interface F0/1.10
+	description "Vers VLAN 10"
+	encapsulation dot1Q 10
+	ip address 10.3.10.252 255.255.255.0
+	no shutdown
+	exit
+!
+interface F0/1.100
+	description "Vers VLAN 100"
+	encapsulation dot1Q 100
+	ip address 10.3.100.252 255.255.255.0
+	no shutdown
+	exit
+!
+interface F0/0
+	ip address 192.168.0.254 255.255.255.0 
+	no shutdown
+	exit
+!
+! ROUTING 
+! 
+ip route 192.168.0.0 255.255.255.0 F0/0 
+!
+no router ospf 1
+router ospf 1
+	network 10.3.10.0 0.0.0.255 area 2 
+	network 10.3.100.0 0.0.0.255 area 2 
+	redistribute connected subnets 
+	exit 
+!
+
+!-------------------------------------------------------------------------------
+! WH-SW-01
+!-------------------------------------------------------------------------------
+!
+hostname WH-SW-01
+!
+VLAN 10
+	name PROD
+VLAN 100 
+	name IT
+!
+interface F0/24 
+	description "Vers WH-RT-01"
+	switchport mode trunk
+	switchport trunk native vlan 1
+	exit 
+!
+interface F0/1
+	description "Vers WH-RT-02"
+	switchport mode trunk 
+	switchport trunk native vlan 1
+	exit 
+!
+interface F0/2
+	description "Vers WH-RT-03"
+	switchport mode trunk 
+	switchport trunk native vlan 1
+	exit 
+!
+interface vlan 100	
+	description "VLAN de gestion"
+	ip address 10.2.100.241 255.255.255.0
+	no shutdown 
+	exit
+!
+ip default-gateway 10.3.100.254
+!

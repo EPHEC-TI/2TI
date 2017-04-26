@@ -1,0 +1,157 @@
+﻿LABO ACL ----------------------------------------------------------------------
+1 pour moi oui, il est au moins nécessaire de configurer un routage statique entre les deux routeurs
+
+2. Plan d'adressage 
+	5 sous réseaux à partir de 201.10.10.0 /24
+		LAN PC 3 - 8 IP
+			201.10.10.0 /29
+		LAN PC 1
+			201.10.10.8 /29
+		LAN PC 2 
+			201.10.10.16 /29
+		LAN ISP	
+			201.10.10.24 /30
+		P2P serie 
+			201.10.10.32 /30
+			
+3. 	Configurez tout ce qui est nécessaire pour permettre tout le trafic. 
+		=> adressage statique + routage
+	Choisissez un routage qui tienne compte de la bande passante. 
+		=> qui prend en compte la BP pour faire son calcul de route => EIGRP ou OSPF => OSPF
+	La route vers Internet doit être ajoutée automatiquement dans la table de routage de Lab_A.
+		=> ip information default originate ? 
+4 et 5.	Pour tester les configs, tracert et ping sont nos amis <3
+	mais aussi telnet + ip
+!!!RAPPEL : ENTRE UN PC ET UN ROUTEUR QUI N'A PAS DE MODULE PHYSIQUE POUR FAIRE DU SWITCHING, IL FAUT UN CABLE CROISE !		
+!LAB_B ------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+en 
+conf t
+hostname LAB_B
+enable secret class
+!
+interface G0/0
+	ip address 201.10.10.22 255.255.255.248
+	no shutdown
+	exit
+!
+interface S0/1/1
+	ip address 201.10.10.26 255.255.255.252
+	no shutdown
+	exit
+!
+interface S0/1/0
+	ip address 201.10.10.30 255.255.255.252
+	no shutdown
+	exit
+!
+line vty 0 4
+	password cisco
+	access-class telnetConnection in
+	! on pourrait croire qu'il faut mettre ip access-class avec une ACL nommée mais non, cette commande est réservée aux ACL ipv6
+	login
+	exit
+!
+ip route 0.0.0.0 0.0.0.0 S0/1/1
+! Attention : metttre une route par défaut sur une interface n'est bon que si l'interface est configurée (up) !!!
+! si une fois cette commande rentrée, aucune route n'apparait c'est que l'interface n'est configurée/up
+! ip route ne montre que les routes DISPONIBLES et donc des routes avec des interfaces non configurées ne sont 
+! pas disponibles pour le routage.
+!
+router ospf 1
+	network 201.10.10.16 0.0.0.7 area 0
+	network 201.10.10.24 0.0.0.3 area 0
+	network 201.10.10.28 0.0.0.3 area 0
+	default-information originate
+	passive-interface G0/0
+	passive-interface S0/1/1
+	exit
+!
+!ACL
+!
+ip access-list standard telnetConnection
+	remark "pc1 telnet conection authorized, not pc2"
+	permit 201.10.10.9
+	exit
+!LAB_A ------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+en 
+conf t
+hostname LAB_A
+enable secret class
+!
+interface G0/1
+	ip address 201.10.10.14 255.255.255.248
+	ip access-group pc2ToPc1 out 
+	no shutdown
+	exit
+!
+interface G0/0
+	ip address 201.10.10.6 255.255.255.248
+	no shutdown
+	exit
+!
+
+interface S0/1/0
+	ip address 201.10.10.29 255.255.255.252
+	no shutdown
+	exit
+!
+line vty 0 4
+	password cisco
+	access-class telnetConnection in
+	login
+	exit
+!
+router ospf 1
+	network 201.10.10.0 0.0.0.7 area 0
+	network 201.10.10.28 0.0.0.3 area 0
+	network 201.10.10.8 0.0.0.7 area 0
+	passive-interface G0/1
+	exit
+!
+! ACL
+ip access-list standard pc2ToPc1
+	remark "forbid the communication from pc2 in direction to pc1"
+	deny host 201.10.10.17
+	permit any
+	exit
+ip access-list standard telnetConnection
+	remark "pc1 telnet conection authorized, not pc2"
+	permit 201.10.10.9
+	exit
+! ISP ------------------------------------------------------------------------
+------------------------------------------------------------------------------
+en 
+conf t
+hostname ISP
+!
+interface loopback 0
+	ip address 1.1.1.1 255.255.255.255
+	no shutdown
+	exit
+interface S0/1/1
+	ip address 201.10.10.25 255.255.255.252
+	no shutdown
+	exit
+! 
+ip route 201.10.10.0 255.255.255.0 201.10.10.26
+!
+exit
+
+6. 	en mode de configuration globale no + la commande qui a permit de créer l'access list
+	ex: 	no ip access-list standard telnetConnection
+		no access-list 1
+7.	oui car le premier résultat qui match sera celui pris en compte 
+	=> si on permet tout et puis qu'on interdit un hôte, l'hôte va pouvoir passer ... pas si on avait fait l'inverse
+8.	écrire l'ACL dans un bloc note afin de pouvoir la supprimer et la recréer avec les modifs facilement
+9.	en mode configuration d'interface/ de ligne, ip access-group + nom ou num de l'ACL/ access-class + nom ou num de l'acl
+10. ping -I permet de préciser l'interface source du ping soit par son ip soit par
+	un nom de device 
+		avec un extended ping :
+		ex : ping ip 1.1.1.1 data 0000 repeat 500 size 18000 verbose
+								 dest.         
+
+
+https://www.ciscomadesimple.be/wp-content/uploads/2011/06/CMSBE_F04_ACL.pdf
+		

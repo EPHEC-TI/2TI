@@ -1,0 +1,142 @@
+__¨PLAN D'ADRESSAGE__
+
+201.1.1.0 /24
+LAN_ROSE
+-> 24 PC -> 32 IP -> /27
+201.1.1.0 255.255.255.224 Réz0
+201.1.1.31 255.255.255.224 Bcast
+
+LAN_TURQUOISE
+-> 16 PC -> 32 IP -> /27 
+201.1.1.32 .224 RézO
+201.1.1.63 .224 Bcast
+
+LAN_JAUNE
+-> 10 PC -> 16 IP -> /28
+201.1.1.64 255.255.255.240 Réz0
+201.1.1.79 255.255.255.240 Bcast
+
+LAN_252.1
+-> 2 PC -> 4 IP -> /30
+.80 .252 
+.83 .252 
+
+LAN_252.2
+-> 2 PC -> 4 IP
+.84 .252 
+.87 .252
+
+
+--------------------------------------------------------------------------------
+LAB_A
+--------------------------------------------------------------------------------
+hostname LAB_A
+
+interface G0/0
+	ip address 201.1.1.78 255.255.255.240 
+	no shut
+	exit
+
+interface G0/1
+	ip address 201.1.1.62 255.255.255.224
+	ip access-group WEBforPC1 IN 
+	no shut
+	exit
+	
+interface S0/1/0
+	ip address 201.1.1.81 255.255.255.252
+	no shut
+	exit
+
+line vty 0 4
+	password cisco
+	login
+	exit 
+
+
+router eigrp 1 
+	network 201.1.1.64 0.0.0.15
+	network 201.1.1.32 0.0.0.31 
+	network 201.1.1.80 0.0.0.3 
+	passive-interface G0/0 
+	passive-interface G0/1 
+	exit
+
+no ip access-list extended WEBforPC1 
+ip access-list extended WEBforPC1
+	remark "PC1 can http to PC2 but not to PC3"
+	deny tcp host 201.1.1.33 host 201.1.1.65 eq 80 
+	permit ip any any 
+	exit 
+
+--------------------------------------------------------------------------------
+LAB_B
+--------------------------------------------------------------------------------
+hostname LAB_B
+
+interface G0/0
+	ip address 201.1.1.30 255.255.255.224 
+	ip access-group WEBforPC2 IN 
+	ip access-group WEBforPC2 OUT
+	no shut
+	exit
+	
+interface S0/1/0
+	ip address 201.1.1.82 255.255.255.252
+	ip summary-address eigrp 1 201.1.1.0 255.255.255.128
+	
+	no shut
+	exit
+	
+interface S0/1/1
+	ip address 201.1.1.86 255.255.255.252
+	no shut
+	exit
+
+line vty 0 4
+	password cisco
+	login
+	exit
+	
+ip route 0.0.0.0 0.0.0.0 201.1.1.87 
+
+router eigrp 1 
+	network 201.1.1.0 0.0.0.31 
+	network 201.1.1.80 0.0.0.3 
+	network 201.1.1.84 0.0.0.3 
+	passive-interface G0/0 
+	redistribute static 
+	exit
+
+no ip access-list extended WEBforPC2 
+ip access-list extended WEBforPC2
+	remark "PC2 can http to PC3 but no one except PC1 can http PC2"
+	permit tcp host 201.1.1.33 host 201.1.1.1 eq 80
+	permit tcp host 201.1.1.1 host 201.1.1.65 eq 80
+	deny tcp any host 201.1.1.1 eq 80
+	permit ip any any 
+	exit
+
+
+--------------------------------------------------------------------------------
+ISP
+--------------------------------------------------------------------------------
+hostname ISP
+
+interface S0/1/0
+	ip address 201.1.1.85 255.255.255.252 
+	no shut 
+	exit
+
+interface L0 
+	ip address 1.1.1.1 255.255.255.255
+	no shut
+	exit
+
+interface G0/0 
+	ip address 192.168.0.254 255.255.255.0
+	no shut 
+	exit 
+	
+ip route 0.0.0.0 0.0.0.0 201.1.1.86
+

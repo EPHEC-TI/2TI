@@ -1,0 +1,79 @@
+__FACTORY_______________________________________________________________________
+________________________________________________________________________________
+!-------------------------------------------------------------------------------
+! FA-RT-01
+!-------------------------------------------------------------------------------
+hostname FA-RT-01
+!
+interface F0/0
+	no shutdown
+	exit
+!
+interface F0/0.10 
+	description "Vers VLAN 10"
+	encapsulation dot1Q 10
+	ip address 10.2.10.254 255.255.255.0
+	no shutdown
+	exit
+!
+interface F0/0.100
+	description "Vers VLAN 100"
+	encapsulation dot1Q 100
+	ip address 10.2.100.254 255.255.255.0 
+	no shutdown
+	exit
+!
+interface F1/0
+	description "Vers HQ-RT-01 100Mb/s, principale"
+	ip address 200.12.1.2 255.255.255.252
+	bandwidth 100000
+	no shutdown
+	exit
+!
+interface S0/1
+	description "Vers HQ-RT-01 4Mb/s, secours"
+	ip address 200.12.2.2 255.255.255.252
+	bandwidth 4000
+	no shutdown
+	exit
+!
+! ROUTING
+!
+! avant le routage, il faut préciser la bandwith des interfaces qui sont en 
+! "concurrence"
+no router ospf 1
+router ospf 1
+	auto-cost reference-bandwidth 1000 
+	network 10.2.10.0 0.0.0.255 area 1
+	network 10.2.100.0 0.0.0.255 area 1
+	network 200.12.1.0 0.0.0.3 area 1 
+	network 200.12.2.0 0.0.0.3 area 1 
+	passive-interface F0/0
+	area 1 stub
+	exit 
+	
+!-------------------------------------------------------------------------------
+! FA-SW-01
+!-------------------------------------------------------------------------------
+!
+hostname FA-SW-01
+!
+VLAN 10
+	name PROD
+VLAN 100 
+	name IT
+!
+interface F0/24 
+	description "Vers FA-RT-01"
+	switchport mode trunk
+	switchport trunk native vlan 1
+	exit 
+
+interface vlan 100	
+	description "VLAN de gestion"
+	ip address 10.2.100.241 255.255.255.0
+	no shutdown 
+	exit
+!
+ip default-gateway 10.2.100.254
+!
