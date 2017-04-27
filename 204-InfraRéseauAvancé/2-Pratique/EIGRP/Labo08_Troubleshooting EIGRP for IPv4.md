@@ -162,10 +162,9 @@ router eigrp 1
 
 ##### R2
 
-* Annoncé les réseaux manquants, plus ajouté subnet a redistribute
+* Annoncé le réseaux manquant
 ```
 router eigrp 1 
-	redistribute static subnet
 	network 172.31.40.228 0.0.0.3
 ```
 
