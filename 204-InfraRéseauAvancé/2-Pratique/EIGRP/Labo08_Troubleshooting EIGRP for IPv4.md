@@ -3,10 +3,10 @@
 * R1
   * Pas de voisins dans la table des voisins ...
   * La table de topologie n'est pas complète
-	* la table de routage non plus (manque 209.165.201.0, route statique censée
-	redistribuée par R2).
+  * la table de routage non plus (manque 209.165.201.0, route statique censée
+  redistribuée par R2).
   * on voit que les bons réseaux ont été annoncé dans le processus eigrp 
-	* subtile erreur, R1 a annoncé le mauvais numéro d'AS (11 alors que les autres sont à 1)
+  * subtile erreur, R1 a annoncé le mauvais numéro d'AS (11 alors que les autres sont à 1)
 ```
 R1#sh ip eigrp neighbors 
 IP-EIGRP neighbors for process 11
@@ -47,9 +47,9 @@ L       172.31.40.233/32 is directly connected, Serial0/0/1
 
 * R2 
   * pas de voisins eigrp 
-	* table de topologie étrange/incomplète
-	* table de routage incomplète (172.31.30.0 manquant)
-	* ici on voit bien que R2 n'a pas annoncé tous les réseaux qu'il connaissait ...
+  * table de topologie étrange/incomplète
+  * table de routage incomplète (172.31.30.0 manquant)
+  * ici on voit bien que R2 n'a pas annoncé tous les réseaux qu'il connaissait ...
 ```
 R2>sh ip eigrp neighbors 
 IP-EIGRP neighbors for process 1
@@ -104,8 +104,7 @@ S*   0.0.0.0/0 [1/0] via 209.165.201.2
 * R3
   * R3 déclare auto-summary alors qu'on travaille avec des subnets mal organisés (cfr labo 6 eigrp),
 	mais déclare bien tous les réseaux connus.
-	* Toujours rien dans la table de topologie 
-	*
+  * Toujours rien dans la table de topologie 
 	
 ```
 R3#sh run 
