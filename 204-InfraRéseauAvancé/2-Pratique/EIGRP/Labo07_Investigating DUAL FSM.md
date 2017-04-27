@@ -161,8 +161,6 @@ d'arrêt par après.**
 #### Step 2: Force a DUAL FSM update to generate debug output.
 
 * on R3 
-```
-```
 
 ```
 R3(config)# interface s0/0/0
