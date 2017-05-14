@@ -26,6 +26,7 @@ ip ssh version 2
 ip default-gateway 10.10.10.145
 !
 line vty 0 15
+    password letmein
     login 
     transport input ssh
     exit
@@ -78,6 +79,7 @@ Admin
 !
 interface G0/0
     no ip address
+    ip nat inside
     no shut
 interface G0/0.15
     description "Vlan serveurs"
@@ -99,11 +101,23 @@ interface G0/0.45
 !
 interface G0/0.60
     description "vlan de gestion"
-    encapsulation dot1q 60 native
+    encapsulation dot1q 60 
     ip address 10.10.10.145 255.255.255.240
     no shut
     exit
 !
+interface S0/0/0
+    ip nat outside
+    exit
+!
+interface S0/0/1
+    ip nat outside
+    exit
+!
+interface S0/1/0
+    ip nat outside
+    exit
+
 ! DHCP 
 ! 
 ip dhcp pool LAN
@@ -116,13 +130,16 @@ ip dhcp excluded-address 10.10.10.193
 ! ROUTAGE 
 !
 router ospf 1
-
-
-
-
-
-
-
+    ! déconseillé de faire comme ça pour l'id ( l vaut mieux mettre une loobpack)
+    router-id 1.1.1.1
+    network 10.10.10.0 255.255.255.0
+    passive-interface G0/0
+    exit
+! 
+! NAT
+!statique pour le file server
+ip nat inside source static 10.10.10.162 198.133.219.130
+! dynamique pour le reste
 
 
 
