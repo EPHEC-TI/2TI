@@ -15,6 +15,7 @@ de couche 3, le routeur d'un coté et les SWL3 de l'autre. Ainis toutes ces liai
 *  `etherchannel` et HSRP sont des choses différentes ! Le premier permet l'aggrégation de ports,
 le deuxième l'aggrégation de switch.
 
+**area 1**
 ```
 !----------------------------------------------------------------------
 ! S1-RT-01
@@ -31,10 +32,25 @@ interface S0/1/0
 	ip address 200.0.1.2 255.255.255.252
 	no shut
 	exit
+!
+! default-gateway
 ip route 0.0.0.0 0.0.0.0 S0/1/0
+! GRE tunnel (needed to avoid flip-flop og the interface, voir plus bas dans problèmes rencontrés)
+ip route 200.0.2.2 255.255.255.255 S0/1/0
+!
+! GRE
+!
+interface Tunnel0
+ ip address 192.168.254.1 255.255.255.0
+ tunnel source Serial0/1/0
+ tunnel destination 200.0.2.2
+ no shut
+ exit
 !
 router ospf 1
 	network 10.1.0.248 255.255.255.248 area 0
+    network 192.168.254.0 255.255.255.0 area 2
+    passive-interface G0/0
 	default-information originate
 	exit
 !----------------------------------------------------------------------
@@ -270,15 +286,69 @@ interface vlan 90
 	exit
 
 ```
-##### Tests
 
-* `sh vlan` doit montrer tous les vlans sur les trois switch du bas, on peut aussi vérifier 
-que les interfaces apparraissent dasn le bon vlan et que les interfaces de trunk n'apparraissent pas.
-
-* sur PC0, tous ces pings la doivent passer : 
+**area 2**
 ```
-ping 10.1.90.241
-ping 10.1.90.254
-ping 10.1.0.251
+!----------------------------------------------------------------------
+! S2-RT-01
+!----------------------------------------------------------------------
+!
+interface Tunnel0
+    ip address 192.168.254.2 255.255.255.0
+    tunnel source Serial0/1/1
+    tunnel destination 200.0.1.2
+!
+!
+interface GigabitEthernet0/0
+    ip address 10.2.1.254 255.255.255.0
+!
+interface Serial0/1/1
+    ip address 200.0.2.2 255.255.255.252
+!
+no router ospf 1
+router ospf 1
+ log-adjacency-changes
+ passive-interface GigabitEthernet0/0
+ network 10.2.1.0 0.0.0.255 area 2
+ network 192.168.254.0 0.0.0.255 area 2
+!
+! default-gateway 
+ip route 0.0.0.0 0.0.0.0 Serial0/1/1 
+! GRE needed avoid flip-flop ??
+ip route 200.0.1.2 255.255.255.255 S0/1/1
+!
+!----------------------------------------------------------------------
+! S2-SW-01
+!----------------------------------------------------------------------
 
 ```
+##### Problémes rencontrés
+
+Au moment ou le tunnel GRE a été établi et semblait fonctionner, les interfaces tunnel 0 sur les deux routeurs n'arrétaient pas de virer up et down alternativement et foutait tout en l'air... message d'erreur de type:
+
+**S2-RT-01**
+```
+01:31:11: %OSPF-5-ADJCHG: Process 1, Nbr 200.0.1.2 on Tunnel0 from FULL to DOWN, Neighbor Down: Interface down or detached
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Tunnel0, changed state to up
+
+01:32:11: %OSPF-5-ADJCHG: Process 1, Nbr 200.0.1.2 on Tunnel0 from LOADING to FULL, Loading Done
+ %ADJ-5-PARENT: Midchain parent maintenance for IP midchain out of 0 65E900C0 - looped chain attempting to stack
+ %TUN-5-RECURDOWN: 0 temporarily disabled due to recursive routing
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Tunnel0, changed state to down
+
+01:32:16: %OSPF-5-ADJCHG: Process 1, Nbr 200.0.1.2 on Tunnel0 from FULL to DOWN, Neighbor Down: Interface down or detached
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Tunnel0, changed state to up
+
+01:33:21: %OSPF-5-ADJCHG: Process 1, Nbr 200.0.1.2 on Tunnel0 from LOADING to FULL, Loading Done
+ %ADJ-5-PARENT: Midchain parent maintenance for IP midchain out of 0 65E900C0 - looped chain attempting to stack
+ %TUN-5-RECURDOWN: 0 temporarily disabled due to recursive routing
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Tunnel0, changed state to down
+
+01:33:31: %OSPF-5-ADJCHG: Process 1, Nbr 200.0.1.2 on Tunnel0 from FULL to DOWN, Neighbor Down: Interface down or detached
+```
+Et pareil sur l'autre routeur.
+J'ai essayé d'ajouter deux routes staiques comme indiqué [ici](http://www.cisco.com/c/en/us/support/docs/ip/enhanced-interior-gateway-routing-protocol-eigrp/22327-gre-flap.html) (et ouais mec la doc cisco carrément). Mais ça ne marchait point ...  
