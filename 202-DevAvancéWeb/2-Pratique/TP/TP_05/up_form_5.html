@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="JS/up_form_3.js"></script>
+</head>
+<body>
+    <form id="form" action="upload_5.php" method="POST" enctype="multipart/form-data">
+        <p>
+            Selectionner un fichier:<br>
+            <input type="file" name="datafile" id="datafile" onchange="verif()">
+        </p>
+        <p>
+            Entrer un numero:<br>
+            <input type="number" name="id" id="id" min="1" max="500" step="1">
+        </p>
+        <div>
+            <input type="submit" value="Send" id="button">
+        </div>
+        <p id="tailleFichier"></p>
+    </form>
+</body>
+</html>
