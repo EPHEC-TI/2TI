@@ -1,4 +1,4 @@
-*Configuration du labo récapitulatif - mai 2017 - Martin Petit
+* Configuration du labo récapitulatif - mai 2017 - Martin Petit
 Comme d'hab hésitez pas si vous voyez des erreurs ou des choses à améliorer, 
 pour les questions aussi hésitez pas !*
 
