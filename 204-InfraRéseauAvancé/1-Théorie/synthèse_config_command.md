@@ -367,4 +367,4 @@ interface vlan 90
 
 * Il faut faire attention si on joue avec des switch actif et standby différents par vlan de garder une cohérence par rapport à STP. Exemple (voir schéma-ci dessous), ici comme A est root primary, la laison B - C est bloquante (symbolisé par une magnifique croix rouge, merci outil de dessin de Packer tracer <3). Or on voit que B configuré de tel sorte qu'il est actif au niveau HSRP pour le vlan 1. Donc le traffic du vlan 1 va être obligé de passer par B, mais comme la liaison B-C est bloquante, le traffic qui vient de C passera par A avant d'aller à B = détour. Ici A devrait etre actif pour le vlan 1 ou être le root secondary pour STP.
 
-![exemple](IMG/hsrp_stp.PNG)
+![exemple](./hsrp_stp.PNG)
