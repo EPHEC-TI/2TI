@@ -49,8 +49,7 @@ interface Tunnel0
 !
 router ospf 1
 	network 10.1.0.248 255.255.255.248 area 0
-    network 192.168.254.0 255.255.255.0 area 2
-    passive-interface G0/0
+    	network 192.168.254.0 255.255.255.0 area 2
 	default-information originate
 	exit
 !----------------------------------------------------------------------
