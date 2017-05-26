@@ -233,8 +233,13 @@ R4(config-router)# network 172.16.99.0 0.0.0.255 area 2
 ###### Vieux matos 
 <a id="dhcp"></a>
 #### DHCP 
-* `ip dhcp pool +nom`
+* `ip dhcp pool <nom>`
+  * `dns-server <ip>`
+  * `default-gateway <ip>`
   * `network 192.168.0.0 255.255.255.0`
+
+Exclure un pool d'adresse du DHCP : 
+`ip dhcp excluded-address <ip-start> <ip-end>`
 
 <a id="nat"></a>
 #### NAT  
