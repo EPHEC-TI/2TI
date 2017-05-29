@@ -10,7 +10,7 @@ A company can be structured in different way :
 
 The liability of a company is assumed by the owners. 
 
-###Structure of a corporation
+### Structure of a corporation
 There are the : 
 - Board of directors :
   - Elected by shareholders
@@ -74,11 +74,11 @@ The head of the department is usually a Vice-President
 - **IS - Information Services :** The therm service shows that the IT department also provides services other than the technologies. We're talking about security services and expertises in this case
 
 #### Role of an IT department 
--  **CIO : **
+-  **CIO :**
   - Lead the IT department 
   - Manage the IT budget 
   - Communicate the vision and strategy of the IT inside and outside the department
--  **IT Manager : **
+-  **IT Manager :**
   - Depends on the size of the company, manage the technical part of the department 
   - Manage his team and reports to the management
   - Ensure delivery
@@ -92,7 +92,7 @@ The CIO/IT Management can be only one person in a small company
   - Assessing the impact of changes
   - Analyse the needs and translate them into IT specs
   - Translate the IT to the mankind 
-- **Sys Admin : **
+- **Sys Admin :**
   - Reponsible for the entreprise's servers 
   - Build and maintain the servers
 - **Helpdesk engineer** : 
