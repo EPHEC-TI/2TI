@@ -38,7 +38,8 @@ L'identifiant primaire est constitué de colonnes obligatoires.
 * Une **clé étrangère** est un groupe de colonnes d'une table S tel qu'il existe, à tout moment, dans une table T, une ligne dont l'identifiant a pour valeur(s) celle(s) de ce groupe.  La valeur de la clé étrangère sert à référencer une ligne de la table T. = clé secondaire
 
 > référence de préférence l'identifiant primaire de la table cible et est du même type et du même nombre de colonnes.
-Pas de `null` dans une lcé étrangère (sauf exception dans le de structure cyclique directe).
+Si une des colonnes de la clé étrangère est facultative, il est préférable de les rendres toutes facultatives.
+Pas de `null` dans une clé étrangère (sauf exception dans les structures cycliques directes).
 La clé étrangère peut être/faire partie d'un identifiant.
 
 * Une **table normalisée** est une table sans dépendance fonctionelle anormale (la réciproque est vrai).
@@ -58,7 +59,7 @@ En cas de mise en danger de la contrainte référentielle (suppression d'une lig
   * `cascade` : supprime la ligne et les lignes référentes
   * `set null` : si possible (pas de contraintes de colonnes obligatoires), la valeur de la référence est mise à null, sinon opération refusée.
   * `set default` : la valeur référencante est mise à la valeur par défaut, si il y en a une, sinon opération refusée.
-* **dépendance fonctionelle** (slide 26), une colonne ou unn groupe de colonnes peut être déterminée par une ou plusieurs colonnes (ex: ISBN détermine AUTEUR et TITRE car deux livres qui ont le même numéro d'ISBN devront avoir le même AUTEUR ET TITRE, donc ISBN est déterminant de AUTEUR et TITRE). Il y a redondance si il existe un déterminant qui n'est pas identifiant de la table = dépendance fonctionelle anormale
+* **dépendance fonctionelle** (slide 26), une colonne ou unn groupe de colonnes peut être déterminée par une ou plusieurs colonnes (ex: ISBN détermine AUTEUR et TITRE car deux livres qui ont le même numéro d'ISBN devront avoir le même AUTEUR ET TITRE, donc ISBN est déterminant de AUTEUR et TITRE). Il y a redondance s'il existe un déterminant qui n'est pas identifiant de la table = dépendance fonctionelle anormale
 
 <a id="redondance"></a>
 #### Redondances
@@ -71,7 +72,7 @@ Tout fait du domaine d'application est enregistré une et une seule fois.
 **Risque:**
 * gaspillage d'espace
 * perte de consistance de données (des valeurs différentes) lors de changements ou lors d'insertion d'une info déjà existante.
-* perte d'informations en chaines "si on supprime l'unique exemplaire d'un livre, on perd les informations sur son auteur et son titre"
+* perte d'informations en chaines "si on supprime l'unique exemplaire d'un livre, on perd les informations sur son auteur et son titre".
 
 **Détection:**
 
@@ -81,8 +82,7 @@ Tout fait du domaine d'application est enregistré une et une seule fois.
 
 1. En conservant dans la première table le déterminant identifiant et ses déterminés.
 2. En créant une dexuième table avec le déterminant non identifiant et les résidus et en faire l'identifiant.
-3. En recommencant à 1 avec la deuxième table si il existe encore de la redondance.
-
+3. En recommençant à 1 avec la deuxième table s'il existe encore de la redondance.
 
 
 <a id="structPhy"></a>
