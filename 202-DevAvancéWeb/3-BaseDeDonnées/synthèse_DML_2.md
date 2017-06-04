@@ -149,7 +149,7 @@ ici on a besoin de deux fois la table PRODUIT  pour pouvoir récupérer d'abord 
 <a id="groupData"></a>
 #### Données groupées `GROUP BY`
 
-* On n'est obligé de mettre une clause `GROUP BY` dans la requête si une une fonction d'aggrégation est utilisée qui ne concerne pas toute les colonnes déclarées dans le SELECT. Alors on retrouvera dans le `GROUP BY`, toutes les colonnes non-concernées par la [fonction aggrégative](https://github.com/EPHEC-TI/2TI/blob/master/202-DevAvanc%C3%A9Web/3-BaseDeDonn%C3%A9es/synth%C3%A8se_DML_1.md#fonction-aggrégatives).
+* On n'est obligé de mettre une clause `GROUP BY` dans la requête que si une une fonction d'aggrégation est utilisée qui ne concerne pas toute les colonnes déclarées dans le SELECT. Alors on retrouvera dans le `GROUP BY`, toutes les colonnes non-concernées par la [fonction aggrégative](https://github.com/EPHEC-TI/2TI/blob/master/202-DevAvanc%C3%A9Web/3-BaseDeDonn%C3%A9es/synth%C3%A8se_DML_1.md#fonction-aggrégatives).
 
 ```
 select LOCALITE,
