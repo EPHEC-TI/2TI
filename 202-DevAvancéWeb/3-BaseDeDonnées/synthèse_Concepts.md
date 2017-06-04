@@ -37,10 +37,10 @@ L'identifiant primaire est constitué de colonnes obligatoires.
 
 * Une **clé étrangère** est un groupe de colonnes d'une table S tel qu'il existe, à tout moment, dans une table T, une ligne dont l'identifiant a pour valeur(s) celle(s) de ce groupe.  La valeur de la clé étrangère sert à référencer une ligne de la table T. = clé secondaire
 
-> référence de préférence l'identifiant primaire de la table cible et est du même type et du même nombre de colonnes.
-Si une des colonnes de la clé étrangère est facultative, il est préférable de les rendres toutes facultatives.
-Pas de `null` dans une clé étrangère (sauf exception dans les structures cycliques directes).
-La clé étrangère peut être/faire partie d'un identifiant.
+> Référence de préférence l'identifiant primaire de la table cible et est du même type et du même nombre de colonnes.    
+Si une des colonnes de la clé étrangère est facultative, il est préférable de les rendres toutes facultatives.    
+Pas de `null` dans une clé étrangère (sauf exception dans les structures cycliques directes).    
+La clé étrangère peut être/faire partie d'un identifiant.    
 
 * Une **table normalisée** est une table sans dépendance fonctionelle anormale (la réciproque est vrai).
 
