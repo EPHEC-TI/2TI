@@ -23,7 +23,25 @@ create table CLIENT ( NCLI     char(10) not null,
                       COMPTE   decimal(9,2) not null,
                       primary key (NCLI),
                       unique (NOM) );
-
+                      
+...
+/* exemple de création d'une structure cyclique directe */
+create table PERSONNE ( NPERS       char (4) not null,
+                        NOM         char(25) not null,
+                        RESPONSABLE char (4),
+                        primary key (NPERS),
+                        foreign key (RESPONSABLE)
+                                references PERSONNE);
+...
+/* exemple de création d'une structure cyclique directe */
+create table PRODUIT ( NPRO     char(4) not null primary key,
+                       LIBELLE  char(25) not null,
+                       PRIX_U   char(4),
+                       POIDS_U  char(4));
+create table COMPOSITION ( COMPOSE   char(4) not null references PRODUIT,
+                           COMPOSANT char(4) not null references PRODUIT,
+                           QTE   decimal(4) not null,
+                           primary key (COMPOSE,COMPOSANT));
 ```
   * clé étrangère
   ```

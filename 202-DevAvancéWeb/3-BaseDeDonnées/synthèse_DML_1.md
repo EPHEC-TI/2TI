@@ -61,7 +61,7 @@ select NCLI, NOM
 
 ```
 * `where col IS null ` et pas `WHERE CAT = null` et donc la réciproque `IS NOT NULL`
-* `IN` permet de spécifier une série de valeur à laquelle la colonne pour appartenir ou pas.
+* `IN` permet de spécifier un tableau de valeurs à laquelle la colonne pour appartenir ou pas.
 * `BETWEEN` permet de spécifier un range de valeur à respecter.
 * `LIKE` permet de spécifier un "masque" ou `_` vaut un caractère quelconque et obligatoire ( et donc pas zéro ! ) et `%` un/plusieurs caractères quelconque. CASE SENSITIVE ! 
 `_%` permet de forcer un caractère minimum.
@@ -74,7 +74,7 @@ select NCLI, NOM
 
 * possiblités de mettre des colonnes "remplies" d'un texte défini dans le SELECT
 * possiblités de SELECT une colonne composée d'un calcul entre plusieurs colonnes.
-* possibilité d'aliaser le nom d'une colonne, pour qu'elle soit plus riche sémantiquement aux yeux de l'utilisateur par exemple
+* possibilité d'aliaser le nom d'une colonne, pour qu'elle soit plus riche sémantiquement aux yeux de l'utilisateur par exemple. **Un alias dans un SELECT ne peut être utilisé que dans un ORDER BY et nulle part ailleurs, ceci du à l'ordre d'éxécution interne des requêtes (SELECT en avant dernier)**.
 
 ![SQL-DML-1, slide 16](./IMG/DML1_slide_16.PNG)
 ![SQL-DML-1, slide 17](./IMG/DML1_slide_17.PNG)
@@ -86,7 +86,7 @@ select NCLI, NOM
 
 * Une fonction aggrégative ne renvoie qu'une seule ligne !
 
-* Si une colonne dans le `SELECT` n'est pas concernée par une fonction aggrégative, elle DOIT se trouver dans le `GROUP BY`.
+* Si une colonne dans le `SELECT` n'est pas concernée par une fonction aggrégative, elle DOIT se trouver dans le `GROUP BY`. Ce n'est que dans ce cas là que `GROUP BY` est obligatoire !
 
 * Attention aux doublons quant aux requêtes aggrégatives ne portant pas sur une clé primaire.
 
@@ -112,7 +112,7 @@ select count(distinct NCLI)
 ```
 
 <a id="subq"></a>
-##### Les Sous-Requêtes
+##### Les Sous-Requêtes / Requêtes Imbriquées
 
 ```
 select NCOM, DATECOM
@@ -161,16 +161,16 @@ SELECT NCOM, DATECOM, NCLI
 /* Ici, la sous-requêtes retourne bien les commandes n'ayant concerné que du PA60 mais AUSSI les commandes qui ont commandé du PA60 en plus d'autre chose. Du coup dans commande on prend toutes les infos des commandes qui ne se retrouvent pas dans le résultat de la subquery*/
 ```
 <a id="SRC"></a>
-* Les *sous-requêtes corrélées* font référence aux colonnes de la requête parents. En aliasant la table de la requête principale, on peut faire référence à celle-ci dans la sous-requête et ainsi la parcourir à deux vitesses différentes.
+* Les *sous-requêtes corrélées* font référence aux colonnes de la requête parents. En aliasant la table de la requête principale, on peut faire référence à celle-ci dans la sous-requête et ainsi la parcourir à deux vitesses différentes. Cet alias est nécessaire pour bien différencier les deux tables.
 
 ```
 /* On cherche à avoir la liste des clients dont le compte dépasse la moyenne des comptes des autres clients habitant la même localité */
 
 select NCLI, NOM, LOCALITE, COMPTE -------------------(6)
-     from   CLIENT as C ------------------------------(2)
+     from   CLIENT as C ------------------------------(1)
      where  COMPTE > ---------------------------------(5)
                     (select avg(COMPTE) --------------(4)   
-                      from   CLIENT ------------------(1)
+                      from   CLIENT ------------------(2)
                       where  LOCALITE = C.LOCALITE); -(3)
                       
 /* On bloque la première ligne de C, on mémorisée sa LOCALITE,  on va dans CLIENT, et pour ont fait la moyenne des COMPTE des CLIENT habitant la LOCALITE mémorisée, entre parenthèse, l'ordre des actions faites en SQL (à prendre avec précaution, je ne m'avance pas à 100% sur cet ordre, je peux m'être trompé sur cette partie !!!)*/
