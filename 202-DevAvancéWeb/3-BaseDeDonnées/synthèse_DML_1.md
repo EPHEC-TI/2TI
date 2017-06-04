@@ -9,6 +9,21 @@ Des phrases sont reprises en partie ou tels quelles de ce document.*
 
 DML concerne 4 requêtes : `SELECT`, `INSERT`, `DELETE` et `ÙPDATE`
 
+#### Sommaire
+
+* [SELECT](#select)
+  * extraction simple
+  * [WHERE](#where)
+  * [Données dérivées](#dd)
+  * [Fonctions aggrégatives](#aggreg)
+  * [Sous-requêtes](#subq)
+  * [IN/NOT IN](#in)
+  * [SR corrélées](#SRC)
+  * [Exist/All/Any](#Exist)
+
+
+
+<a id="select"></a>  
 #### SELECT
 * renvoie une table (même une table de 1 lignes et 1 colonne) 
 * On peut faire un SELECT sur le résultat d'un SELECT (attention limite en SQL2).
@@ -21,6 +36,7 @@ select NCLI, NOM
 ```
 * `distinct` permet de sélectionner les valeurs d'une colonnes sans les doublons ! Toutes les *différentes* valeurs d'une colonnes.
 
+<a id="where"></a>
 ##### WHERE
 ```
 /*Extraction simple/*
@@ -51,6 +67,7 @@ select NCLI, NOM
 `_%` permet de forcer un caractère minimum.
 * on peut utiliser les opérateurs logiques `and` et `or`
 
+<a id="dd"></a>
 ##### Données extraires et données dérivées - expressions de calcul
 
 ![SQL-DML-1, slide 15](./IMG/DML1_slide_15.PNG)
@@ -62,6 +79,7 @@ select NCLI, NOM
 ![SQL-DML-1, slide 16](./IMG/DML1_slide_16.PNG)
 ![SQL-DML-1, slide 17](./IMG/DML1_slide_17.PNG)
 
+<a id="aggreg"></a>
 ##### Fonction Aggrégatives
 
 * SQL contient 5 fonctions aggrégatives : `avg`, `sum`, `count`, `min` et `max`.
@@ -93,6 +111,7 @@ select count(distinct NCLI)
 
 ```
 
+<a id="subq"></a>
 ##### Les Sous-Requêtes
 
 ```
@@ -119,6 +138,7 @@ select *
                              
 /* Retourne toutes les informations concernant les produits des clients habitant Namur */ 
 ```
+<a id="in"></a>
 * `in (sous-requêtes)` permet d'exprimer une **condition d'association**. De plus `not in (sous-requêtes)` est le seul moyen correcte d'exprimer une condition de non association.
 
 ```
@@ -140,6 +160,7 @@ SELECT NCOM, DATECOM, NCLI
 
 /* Ici, la sous-requêtes retourne bien les commandes n'ayant concerné que du PA60 mais AUSSI les commandes qui ont commandé du PA60 en plus d'autre chose. Du coup dans commande on prend toutes les infos des commandes qui ne se retrouvent pas dans le résultat de la subquery*/
 ```
+<a id="SRC"></a>
 * Les *sous-requêtes corrélées* font référence aux colonnes de la requête parents. En aliasant la table de la requête principale, on peut faire référence à celle-ci dans la sous-requête et ainsi la parcourir à deux vitesses différentes.
 
 ```
@@ -155,7 +176,7 @@ select NCLI, NOM, LOCALITE, COMPTE -------------------(6)
 /* On bloque la première ligne de C, on mémorisée sa LOCALITE,  on va dans CLIENT, et pour ont fait la moyenne des COMPTE des CLIENT habitant la LOCALITE mémorisée, entre parenthèse, l'ordre des actions faites en SQL (à prendre avec précaution, je ne m'avance pas à 100% sur cet ordre, je peux m'être trompé sur cette partie !!!)*/
 
 ```
-
+<a id="Exist"></a>
 * **Les quantificateurs ensemblistes** sont : `exists` et `no exists`, `all` et `any`. 
 `Exists(E)` est vrai si E, une sous-requête, renvoie un ensemble non-vide.  
 The `ANY` operator returns true if any of the subquery values meet the condition.

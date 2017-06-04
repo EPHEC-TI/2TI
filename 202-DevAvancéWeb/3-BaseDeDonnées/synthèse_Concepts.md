@@ -24,6 +24,7 @@ Des phrases sont reprises en partie ou tels quelles de ce document.*
   * index
   * espaces de stockages
 
+<a id="def"></a>
 #### Définitions
 
 * Un **identifiant** est un groupe de colonnes d'une table T tel qu'il ne puisse, à tout moment, exister plus d'une ligne dans T qui possède des valeurs déterminées pour ces colonnes.  La valeur de l'identifiant permet de désigner une ligne de T.
@@ -42,7 +43,7 @@ La clé étrangère peut être/faire partie d'un identifiant.
 
 * Une **table normalisée** est une table sans dépendance fonctionelle anormale (la réciproque est vrai).
 
-
+<a id="intégrité"></a>
 #### Contraintes d'intégrités
 
 "Une modification ne sera effectuée que si son résultat ne viole aucune contrainte d'intégrité."
@@ -59,7 +60,7 @@ En cas de mise en danger de la contrainte référentielle (suppression d'une lig
   * `set default` : la valeur référencante est mise à la valeur par défaut, si il y en a une, sinon opération refusée.
 * **dépendance fonctionelle** (slide 26), une colonne ou unn groupe de colonnes peut être déterminée par une ou plusieurs colonnes (ex: ISBN détermine AUTEUR et TITRE car deux livres qui ont le même numéro d'ISBN devront avoir le même AUTEUR ET TITRE, donc ISBN est déterminant de AUTEUR et TITRE). Il y a redondance si il existe un déterminant qui n'est pas identifiant de la table = dépendance fonctionelle anormale
 
-
+<a id="redondance"></a>
 #### Redondances
   
 > Note: La normalisation c'est important mais à relativiser ! "L'ancienne génération" est obnubilée par ça, seulement avec un autre point de vue on peut voir que la normalisation PEUT entrainer des pertes de performances. Seulement la gestion de cette dénormalisation doit être faite avec soin et au travers de programmation procédurale interne à la DB. **Quoi qu'il advienne l'important est de débusquer la dénormalisation et par après décider ce qu'on en fait.**
@@ -84,7 +85,7 @@ Tout fait du domaine d'application est enregistré une et une seule fois.
 
 
 
-
+<a id="structPhy"></a>
 #### Structures physiques
 
 L'intérêt et ce qui a fait le succès de SQL et sa facilité d'utilisation et sa démarquation entre gestion physique et logique. Pour donner un exemple, dans une bibliothèque il existe une organisation logique des livres (par auteur, ISBN, style, ...) et une organisation physique ! Comment les livres sont arrangés phyisquement dans la bibliothèques, dans quelle pièce ? à quel moment du trajet du spectateur ? à quelle hauteur (hauteur des yeux, aux sols, ...). Les structures physiques en SQL servent à ce dernier rôle àd es fins d'optimisation surtout, notamment pour des requêtes fréquemment éxécutées, des données dont on se rend compte qu'on a souvent besoin, tout cela en toute transparence du spectateur qui ne voit que l'organisation logique.
