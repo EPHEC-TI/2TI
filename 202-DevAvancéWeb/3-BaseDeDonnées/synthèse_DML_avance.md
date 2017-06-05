@@ -300,13 +300,26 @@ call NOM_PROCEDURE(param);
 
 #### Les déclencheurs
 
-* un `trigger` sert à la gestion d'évènements, permet une gestion active de la BDD. 
+* un `trigger` sert à la gestion d'évènements, permet une gestion active de la BDD (ajoute un comportement actif autonome à la BDD).
+Basé sur le modèle ECA (événement, condition, action).
+
+- Un trigger peut appeler d'autres triggers.
+- Plusieurs triggers peuvent être associés à une même table (on définit l'ordre d'exécution des triggers dans ce cas).
+- Sous certaines conditions (violation de l'intégrité,...) le trigger et ses actions sont annulés.
+- On peut intéragir avec l'extérieur de la BDD.
+- Un trigger peut se redéclencher lui-même (récursivité - attention à ne pas créer de boucles infinies). 
 
 ```
 create trigger NOM_TRIGGER
 before/after E ---------------- Avant/après l'évènement E (insert, delete)
 when C ------------------------ pour autant que Condition soit satisfaite
+[for each row / for each statement]
 begin
     A ------------------------- éxécuter l'action A
 end;
 ```
+
+- `old` est la valeur d'une colonne avant l'événement (ex: old.COMPTE)
+- `new` est la valeur d'une colonne après l'événement (ex: new.COMPTE). Peut être modifié dans `A` (ex: if ... then new.COMPTE = 0).
+- `for each row` spécifie pour chaque ligne de la requète.
+- `for each statement`spécifie pour chaque requète.
