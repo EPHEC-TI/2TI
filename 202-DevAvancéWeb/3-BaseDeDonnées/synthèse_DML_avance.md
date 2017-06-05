@@ -77,10 +77,10 @@ drop view COM_COMPLETE
 ```
 * une vue n'occupe pas bcp de place, seule sa définition est est stockée. (peut-être pas la même chose pour les vues matérialisées... voir plus bas)
 
-##### Les vues matérialisées 
+##### Les vues non-matérialisées 
 Elle n'est pas pré-calculée, elle n'est calculée que lors de l'appel de la vue.
 
-##### Les vues non-matérialisées
+##### Les vues matérialisées
 
 Par souci de performance (dans des BD bien "fatou"), elle est pré-calculée et stockée temporairement sur le disque. On met en place des moniteurs qui vont surveiller les changements qui sont faits sur la BD et la vue sera recalculée selon deux tactiques : soit à chaque changements, soit après un certain temps pour prendre en compte plus de changements (c'est un domaine de recherche entier qu'il avait dit !)
 

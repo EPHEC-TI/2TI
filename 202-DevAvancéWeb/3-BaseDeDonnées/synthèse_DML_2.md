@@ -116,7 +116,7 @@ select S.NPERS, R.NPERS, R.NOM
      from   PERSONNE S, PERSONNE R
      where  S.RESPONSABLE = R.NPERS
      and    S.NOM = 'Dupont'
-     union --------------------------- au cas ou un responsable s'appelerait Dupont
+     union --------------------------- au cas ou un emplyé s'appelle Dupont et a pas de responsable.
      select NPERS, '--', '--'
      from   PERSONNE
      where  RESPONSABLE is null and NOM = 'Dupont';
