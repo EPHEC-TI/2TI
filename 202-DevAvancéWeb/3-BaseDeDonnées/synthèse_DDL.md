@@ -33,7 +33,7 @@ create table PERSONNE ( NPERS       char (4) not null,
                         foreign key (RESPONSABLE)
                                 references PERSONNE);
 ...
-/* exemple de création d'une structure cyclique directe */
+/* exemple de création d'une structure cyclique indirecte */
 create table PRODUIT ( NPRO     char(4) not null primary key,
                        LIBELLE  char(25) not null,
                        PRIX_U   char(4),
