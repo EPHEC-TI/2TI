@@ -312,8 +312,8 @@ Basé sur le modèle ECA (événement, condition, action).
 ```
 create trigger NOM_TRIGGER
 before/after E ---------------- Avant/après l'évènement E (insert, delete)
-when C ------------------------ pour autant que Condition soit satisfaite
 [for each row / for each statement]
+when C ------------------------ pour autant que Condition soit satisfaite
 begin
     A ------------------------- éxécuter l'action A
 end;
