@@ -1,17 +1,14 @@
 # CISCO
 ## Matière 
--[x] Spanning Tree	
--[x] DHCP en IPv6
-- Sollicited Node
--[x] Access List
-  - Particularités ACL en IPv6 
--[x] NAT
-  - NAT en IPv6
--[x] Protocole OSPF multi-area et simple
+-[x] Spanning Tree  
+-[x] DHCP en IPv6  
+-[x] Access List  
+-[x] NAT  
+-[x] Protocole OSPF multi-area et simple  
 - Protocole EIGRP
--[x] Cryptographique 
-- IPSEC (VPN)
--[x] BPDU Guard
+-[x] Cryptographique   
+-[x] IPSEC (VPN)  
+-[x] BPDU Guard  
 
 
 # Spanning Tree
@@ -25,9 +22,9 @@ Ce protocole répond à la problématique de trames dupliquées. Il fonctionne d
   - **Forwarding** qui transfère les trames de données
 ## Problématique 
 Sans ce protocole, deux problèmes peuvent survenir : 
-1. **Tempêtes de diffusion :** Lorsque des trames de diffusion sont envoyées, les switches envoient ces trames par tous les ports. Ces trames circulent en boucles et sont multipliées. Les trames n'ayant aucune durée de vie (TTL) peuvent tourner indéfiniment. 
+1. **Tempêtes de diffusion :** Lorsque des trames de diffusion sont envoyées, les switches envoient ces trames par tous les ports. Ces trames circulent en boucles et sont multipliées. Les trames n'ayant aucune durée de vie (TTL) peuvent tourner indéfiniment.   
   ![Figure2](http://cisco.goffinet.org/s3/stp1)
-2. **Instabilité des tables MAC :** Quand une trame parvient aux switches connectés en redondance, le port d'origine risque d'être erroné,  un risque de boucle est donc possible. 
+2. **Instabilité des tables MAC :** Quand une trame parvient aux switches connectés en redondance, le port d'origine risque d'être erroné,  un risque de boucle est donc possible.  
   ![Figure3](http://cisco.goffinet.org/s3/stp2)
 > Dans cet exemple, le PC1 envoie une trame au PC2. Les deux commutateurs reçoivent la trame sur leur port 0/2 et associent ce port à l'adresse MAC de PC1. Si l'adresse de PC2 est inconnue, les deux commutateurs transfèrent la trame à travers leur port 0/1. Les commutateurs reçoivent respectivement ces trames inversement et associent l'adresse MAC de PC1 au port 0/1. Ce processus peut se répéter indéfiniment.
 
@@ -93,7 +90,7 @@ Une liste de contôle d'accès (ACL) est une série de commandes qui déterminen
 - Permet de classer le trafic par ordre de priorité
 
 ## Filtrage des paquets 
-Le filtrage des paquets intervient sur les couches 3 et 4 *(Network et Transport)*. Il permet le contrôle de l'accès un à réseau en analysant les paquets entrants et sortants et en les transmettant ou en les refusant selon des critères tels que l'adresse IP source, IPs destinations, le protocole, etc. 
+Le filtrage des paquets intervient sur les couches 3 et 4 *(Network et Transport)*. Il permet le contrôle de l'accès un à réseau en analysant les paquets entrants et sortants et en les transmettant ou en les refusant selon des critères tels que l'adresse IP source, IPs destinations, le protocole, etc.  
 ![aclFigure](https://puu.sh/wfFZW/7f2fb57bc7.png)
 
 ## Fonctionnement
@@ -140,7 +137,7 @@ Le positionnement peut aussi dépendre de :
 - **Bande passante des réseaux concernés** 
 - **Facilité de configuration** 
 
-## Logique d'utilisation ACL standard
+## Logique d'utilisation ACL standard  
 ![ACL](https://puu.sh/wfIs1/855aebef78.png)
 ```
 access-list 2 deny 192.168.10.10
@@ -199,7 +196,7 @@ Network Address Translation
 ## Fonction NAT 
 La fonction du NAT principale consiste à limiter la consommation des adresses IPv4 publiques. Elle perme donc l'utilisation d'adresse IP privée en interne et une traduction de cette adresse en une adresse publique uniquement quand c'est nécessaire. Le NAT permet également d'ajouter de la confidentialité et de la sécurité à réseau. 
 
-Un routeur NAT fonctionne généralement à la périphérie d'un réseau tronqué. Il s'agit d'un réseau ayant une seule connexion à son réseau voisin, avec un seul chemin pour émettre et recevoir. 
+Un routeur NAT fonctionne généralement à la périphérie d'un réseau tronqué. Il s'agit d'un réseau ayant une seule connexion à son réseau voisin, avec un seul chemin pour émettre et recevoir.   
 ![nat](https://puu.sh/wgrG1/5f4dac6747.png)
 La fonction NAT comprend 4 types d'adresses : 
 - **Adresse locale interne** 
