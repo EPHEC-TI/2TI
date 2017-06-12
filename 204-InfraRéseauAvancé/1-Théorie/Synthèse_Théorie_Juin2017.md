@@ -242,7 +242,7 @@ Lorsqu'il n'y a plus de port disponible, et qu'il y a plusieurs adresses externe
 
 ## NAT pour IPv6 
 La NAT en IPv6 sert à fournir de façon transparente un accès entre un réseau IPv6-only et un réseau IPv4-only. Elle ne sert pas dans un cadre de traduction. 
-Dans l'idéal, IPv6 doit être executé de manière native dans la mesure du possible, càd que les périphériques IPv6 communiquent entre eux sur des réseaux IPv6. Pour faciliter le passage d'IPv4 à IPv4, il existe plusieurs techniques de transition adaptées à différents scénarios de type IPv4 vers IPv6, y compris la double pile, la transmission tunnel et la traduction. 
+Dans l'idéal, IPv6 doit être executé de manière native dans la mesure du possible, càd que les périphériques IPv6 communiquent entre eux sur des réseaux IPv6. Pour faciliter le passage d'IPv4 à IPv6, il existe plusieurs techniques de transition adaptées à différents scénarios de type IPv4 vers IPv6, y compris la double pile, la transmission tunnel et la traduction. 
 - **Double pile :** périphériques exécutent des protocoles associés à l'IPv4 et l'IPv6 
 - **Transmission tunnel :** processus d'encapsulation d'un paquet IPv6 à l'intérieur d'un paquet IPv4 pour transmettre un paquet IPv6 sur un réseau IPv4-only.
 
