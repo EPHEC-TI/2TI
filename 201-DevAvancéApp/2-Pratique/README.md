@@ -14,10 +14,13 @@
 - [x] TP4: 12 octobre 2018
 - [x] TP5: 19 octobre 2018
 - [x] TP6: 26 octobre 2018
-- [x] <span style="color:darkBlue"><i>TP7:* 9 novembre 2018</i></span>
-- [x] TP8: 16 novembre 2018
-- [x] TP9: 23 novembre 2018
-- [ ] TP10: 30 novembre 2018
+- [x] <span style="color:darkBlue"><i>P1:* 9 novembre 2018</i></span> - Projet/Remise à niveau/Git
+- [x] TP7: 16 novembre 2018
+- [x] TP8: 23 novembre 2018
+- [x] TP9: 30 novembre 2018
+- [ ] TP10: 7 décembre 2018
+- [x] <span style="color:darkBlue"><i>P2:* 14 décembre 2018</i></span> - Projet/Remise à niveau
+- [x] <span style="color:darkBlue"><i>P3:* 21 décembre 2018</i></span> - Révisions
 
 <span style="color:darkBlue">* Cours pratique consacré au projet, poser des questions, refaire de précédents TP, etc.
 Pas de TP spécifique prévu.</span>
