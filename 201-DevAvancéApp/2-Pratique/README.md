@@ -3,6 +3,8 @@
 >
 ><span style="color:darkOrange"><b><i>Travaux pratiques (backup)</i></b></span>
 
+Repository original : [T2012-Java_EPHEC Original Repo](https://github.com/melvinmajor/T2012-Java_EPHEC)
+
 # Langage de programmation
 <span style="color:darkRed">Java</span>
 <span style="color:darkGray">Eclipse IDE</span>
